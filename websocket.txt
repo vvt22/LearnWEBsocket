@@ -1,0 +1,68 @@
+WEB Socket:-
+//creating an express app
+npm init     \\to create package.json
+npm install express --save
+npm install nodemon --save-dev
+
+------------------------------------------------------------------------------------------------
+var express=require('express'); 
+var app=express();
+var server=app.listen('4000',function(){                    \\making as server.when its listening we can fire a callback fn
+console.log('listening at port...'); });
+
+\\run as nodemon index.js to see
+\\use some middleware to serve some static or public file 
+
+\\static file
+app.use(express.static('public'));
+   
+------------------------------------------------------------------------------------------------
+\\we have to install socket.io for both ends
+
+npm install socket.io --save
+var socket=require('socket.io')
+var io=socket(server);                     \\we want socket to work on this server
+io.on('connection',function(socket){       \\when a connection is made by a browser;also socket refers to instance of that particular socket
+console.log('made connection',socket.id);   \\everytime a new connection, then a new id is created.
+})
+
+\\to connect socket,setup frontend also
+\\so load from socket.io website by downloading it.
+
+<script src="theurlcopiedistobepastedhere"></script>     \\also we have to make reference of it in other file.js  \\created in <head>
+
+other file.js:-   \\the above one was different file.js , as this is been served by a .js server file              \\created n <body>
+
+var socket=io.connect('http://localhost:4000');                  \\ when runned again, "made connection" is printed
+
+------------------------------------------------------------------------------------------------
+\\EMITTING MSGGs
+
+\\setup the frontend code
+
+\\in other file.js
+
+\\ Query DOM
+var message = document.getElementById('message'),
+      handle = document.getElementById('handle'),
+      btn = document.getElementById('send'),
+      output = document.getElementById('output');
+
+\\ Emit events
+btn.addEventListener('click', function(){      
+  socket.emit('chat', {                           \\first param=name of msg to be sent,sec param=actual data;emitting to server
+      message: message.value,
+      handle: handle.value
+  });
+  message.value = "";
+});
+
+\\ Listen for events
+socket.on('chat', function(data){
+    output.innerHTML += '<p><strong>' + data.handle + ': </strong>' + data.message + '</p>';
+});
+------------------------------------------------------------------------------------------------
+further check in code
+
+
+
